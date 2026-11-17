@@ -1,0 +1,62 @@
+{
+  "classification_config": "class_config_default.json",
+  "options": {
+    "orientation": [
+      "ax",
+      "sag",
+      "cor",
+      "3D",
+      "2D",
+      ""
+    ],
+    "modality": [
+      "T1w",
+      "T2w",
+      "FLAIR",
+      "PDw",
+      "T2starw",
+      "?IR",
+      "",
+      "NA"
+    ],
+    "scan_seq": [
+      "SE",
+      "GR",
+      "SEIR",
+      "GRIR",
+      "",
+      "NA"
+    ],
+    "contrast": [
+      "",
+      "ce-gadolinium"
+    ], 
+    "run": [
+      "",
+      "run-1",
+      "run-2",
+      "run-3",
+      "run-4",
+      "run-5"
+    ]
+  },
+  "has_contrast_data": false,
+  "orientation_settings": {
+    "orientation_mode": "anatomical",
+
+    "modes": [
+      {
+        "name": "anatomical",
+        "description": "Returns ax/cor/sag/3D based on plane + acquisition type"
+      },
+      {
+        "name": "dimensionality",
+        "description": "Returns 2D or 3D only, ignores plane"
+      },
+      {
+        "name": "none",
+        "description": "No orientation suffix is added"
+      }
+    ]
+  }
+}

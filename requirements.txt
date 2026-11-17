@@ -1,0 +1,5 @@
+nibabel==5.5.0
+nicegui==4.0.0
+numpy==2.5.4
+pandas==3.1.1
+pydicom==3.0.2

@@ -1,0 +1,169 @@
+{
+  "constants": {
+    "missing_numeric_value": 100000
+  },
+  "sequence_rules": {
+    "GRIR": {
+      "description": "Gradient Echo with inversion",
+      "flags": ["_GR", "GR", "GR_IR", "_IR_GR"],
+      "requires_inversion": true
+    },
+    "GR": {
+      "description": "Gradient Echo",
+      "flags": ["_GR", "GR"],
+      "requires_inversion": false,
+      "sequence_keywords": ["gre", "GRE", "GR", "gr", "vibe", "VIBE", "Vibe"]
+    },
+    "SEIR": {
+      "description": "Spin Echo with inversion",
+      "flags": ["_SE", "SE", "_IR_SE", "IR_SE", "SE_IR"],
+      "requires_inversion": true
+    },
+    "SE": {
+      "description": "Spin Echo",
+      "flags": ["_SE", "SE"],
+      "requires_inversion": false
+    },
+    "IR": {
+      "description": "Inversion Recovery",
+      "flags": ["IR", "RM_IR", "RM"],
+      "requires_inversion": true
+    }
+  },
+  "orientation_rules": {
+    "3D": {
+      "mr_acquisition_type": ["3D"],
+      "code": "3D"
+    },
+    "2D": {
+      "mr_acquisition_type": ["2D", ""],
+      "code": "2D"
+    },
+    "axial": {
+      "plane": "axial",
+      "mr_acquisition_type": ["2D", ""],
+      "code": "ax"
+    },
+    "coronal": {
+      "plane": "coronal",
+      "mr_acquisition_type": ["2D", ""],
+      "code": "cor"
+    },
+    "sagittal": {
+      "plane": "sagittal",
+      "mr_acquisition_type": ["2D", ""],
+      "code": "sag"
+    }
+  },
+  "modality_rules": [
+    {
+      "name": "FLAIR_ir_long_te_tr",
+      "description": "FLAIR with inversion recovery, long TE and TR",
+      "requires_inversion": true,
+      "conditions": {
+        "EchoTime": {"min": 0.08, "max": null},
+        "RepetitionTime": {"min": 4, "max": null}
+      },
+      "modality": "FLAIR",
+      "scan_seq_override": "SEIR"
+    },
+    {
+      "name": "T1w_ir_short_te_tr_general",
+      "description": "T1w with inversion, short TE and TR (general)",
+      "requires_inversion": true,
+      "conditions": {
+        "EchoTime": {"min": 0, "max": 0.06},
+        "RepetitionTime": {"min": 0, "max": 3.5}
+      },
+      "modality": "T1w",
+      "contrast_keywords": ["mpr", "mprage", "MPRAGE", "gad", "Gad", "GAD", "+C", "_C_", "post_gad"]
+    },
+    {
+      "name": "PDw_no_inversion_long_te_short_tr",
+      "description": "PDw - Proton density weighted",
+      "requires_inversion": false,
+      "sequence": "SE",
+      "conditions": {
+        "EchoTime": {"min": 0, "max": 0.03},
+        "RepetitionTime": {"min": 2, "max": null}
+      },
+      "modality": "PDw"
+    },
+    {
+      "name": "T2starw_gr_with_flip",
+      "description": "T2* weighted with GR and intermediate flip angle",
+      "requires_inversion": false,
+      "sequence": "GR",
+      "conditions": {
+        "EchoTime": {"min": 0.01, "max": null},
+        "FlipAngle": {"min": 15, "max": 40}
+      },
+      "modality": "T2starw"
+    },
+    {
+      "name": "T1w_short_te_se_or_gr",
+      "description": "T1w with short TE and low flip angle (GR) or high flip angle (SE)",
+      "requires_inversion": false,
+      "conditions": {
+        "EchoTime": {"min": 0, "max": 0.02}
+      },
+      "sequence_conditions": [
+        {"sequence": "SE", "FlipAngle": {"min": 55, "max": null}},
+        {"sequence": "GR", "FlipAngle": {"min": 0, "max": 15}}
+      ],
+      "modality": "T1w",
+      "contrast_keywords": ["fs", "tse", "gad", "+C", "_C_", "vibe", "T1_3D"],
+      "contrast_exclude_keywords": ["pre_gad", "pre_"]
+    },
+    {
+      "name": "T2w_long_te_tr",
+      "description": "T2w with long TE and TR (no inversion recovery)",
+      "requires_inversion": false,
+      "forbid_inversion": true,
+      "conditions": {
+        "EchoTime": {"min": 0.07, "max": null},
+        "RepetitionTime": {"min": 2, "max": null}
+      },
+      "modality": "T2w"
+    },
+    {
+      "name": "unknown_ir",
+      "description": "Unknown sequence with inversion recovery",
+      "requires_inversion": true,
+      "modality": "?IR"
+    }
+  ],
+  "contrast_keywords": {
+    "ce-gadolinium": {
+      "include": ["gad", "gd", "_c_", "+c", "Contrast", "ce", "post_gad"],
+      "exclude": ["pre_gad", "pre_"]
+    }
+  },
+  "fallback_rules": {
+    "Unknown_to_T2w": {
+      "scan_seq": "",
+      "modality": "T2w",
+      "result": "SE"
+    },
+    "IR_to_T1w": {
+      "scan_seq": "IR",
+      "modality": "T1w",
+      "result": "SEIR"
+    },
+    "IR_to_FLAIR": {
+      "scan_seq": "IR",
+      "modality": "FLAIR",
+      "result": "SEIR"
+    }
+  }, 
+  "datatype_rules": {
+    "anat": {
+      "description": "Anatomical",
+      "modality": ["T1w", "T2w", "FLAIR", "PDw", "T2starw"]
+    },
+    "func": {
+      "description": "Functional",
+      "modality": ["BOLD"]
+    }
+  }
+}
